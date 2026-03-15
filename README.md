@@ -1,2 +1,3 @@
 # JSC301
-Project App
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://blindbox-ev-maximization.streamlit.app/)
+

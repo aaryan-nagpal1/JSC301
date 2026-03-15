@@ -1,4 +1,5 @@
 import random
+from copy import deepcopy
 from pathlib import Path
 
 import streamlit as st
@@ -221,6 +222,7 @@ def init_state():
         "history": [],
         "selected_choice": None,
         "resolved_outcome": None,
+        "session_scenarios": [],
     }
     for k, v in defaults.items():
         if k not in st.session_state:
@@ -228,10 +230,40 @@ def init_state():
 
 
 def reset_all():
-    for k in ["screen", "mode", "scenario_index", "history", "selected_choice", "resolved_outcome"]:
+    for k in ["screen", "mode", "scenario_index", "history", "selected_choice", "resolved_outcome", "session_scenarios"]:
         if k in st.session_state:
             del st.session_state[k]
     init_state()
+
+
+def random_int(low: int, high: int) -> int:
+    low = int(round(low))
+    high = int(round(high))
+    if low > high:
+        low, high = high, low
+    return random.randint(low, high)
+
+
+def build_randomized_scenario(template: dict):
+    scenario = deepcopy(template)
+    payouts = scenario["payouts"]
+    ev = ev_of(payouts)
+    best = best_outcome(payouts)
+
+    if scenario["target_optimal"] == "Blind Box":
+        blind_net = random_int(5, 11)
+        direct_net = random_int(-3, blind_net - 2)
+    else:
+        direct_net = random_int(4, 10)
+        blind_net = random_int(-4, direct_net - 2)
+
+    scenario["blind_box_cost"] = max(1, random_int(ev - blind_net - 0.49, ev - blind_net + 0.49))
+    scenario["direct_buy_price"] = max(1, random_int(best["value"] - direct_net - 0.49, best["value"] - direct_net + 0.49))
+    return scenario
+
+
+def generate_session_scenarios():
+    return [build_randomized_scenario(template) for template in MAIN_SCENARIO_TEMPLATES]
 
 
 def start_mode(mode: str):
@@ -240,6 +272,7 @@ def start_mode(mode: str):
     st.session_state.history = []
     st.session_state.selected_choice = None
     st.session_state.resolved_outcome = None
+    st.session_state.session_scenarios = generate_session_scenarios()
     st.session_state.screen = "choice"
 
 
@@ -282,7 +315,7 @@ def next_step():
         reset_all()
         st.rerun()
 
-    if st.session_state.scenario_index < len(MAIN_SCENARIOS) - 1:
+    if st.session_state.scenario_index < len(st.session_state.session_scenarios) - 1:
         st.session_state.scenario_index += 1
         st.session_state.selected_choice = None
         st.session_state.resolved_outcome = None
@@ -320,7 +353,7 @@ DEMO_SCENARIO = {
     ],
 }
 
-MAIN_SCENARIOS = [
+MAIN_SCENARIO_TEMPLATES = [
     {
         "title": "Starter Shelf",
         "subtitle": "One rare item makes the gamble tempting.",
@@ -379,6 +412,11 @@ MAIN_SCENARIOS = [
     },
 ]
 
+MAIN_SCENARIO_TEMPLATES[0]["target_optimal"] = "Blind Box"
+MAIN_SCENARIO_TEMPLATES[1]["target_optimal"] = "Blind Box"
+MAIN_SCENARIO_TEMPLATES[2]["target_optimal"] = "Direct Buy"
+MAIN_SCENARIO_TEMPLATES[3]["target_optimal"] = "Direct Buy"
+
 
 # ---------- UI Screens ----------
 init_state()
@@ -386,7 +424,9 @@ init_state()
 if st.session_state.mode == "demo":
     current_scenario = DEMO_SCENARIO
 elif st.session_state.mode == "game":
-    current_scenario = MAIN_SCENARIOS[st.session_state.scenario_index]
+    if not st.session_state.session_scenarios:
+        st.session_state.session_scenarios = generate_session_scenarios()
+    current_scenario = st.session_state.session_scenarios[st.session_state.scenario_index]
 else:
     current_scenario = None
 
@@ -441,7 +481,7 @@ elif st.session_state.screen == "choice":
             st.markdown('<div style="text-align:right; padding-top:8px; color:#dbeafe;">Demo Round</div>', unsafe_allow_html=True)
         else:
             st.markdown(
-                f'<div style="text-align:right; padding-top:8px; color:#dbeafe;">Round {st.session_state.scenario_index + 1} of {len(MAIN_SCENARIOS)}</div>',
+                f'<div style="text-align:right; padding-top:8px; color:#dbeafe;">Round {st.session_state.scenario_index + 1} of {len(st.session_state.session_scenarios or MAIN_SCENARIO_TEMPLATES)}</div>',
                 unsafe_allow_html=True,
             )
 
@@ -598,7 +638,7 @@ elif st.session_state.screen == "summary":
     )
     a, b, c = st.columns(3)
     with a:
-        stat_card("Correct Choices", f"{correct_count}/{len(MAIN_SCENARIOS)}")
+        stat_card("Correct Choices", f"{correct_count}/{len(st.session_state.session_scenarios)}")
     with b:
         stat_card("Total Net", currency(net_total))
     with c:

@@ -4,7 +4,6 @@ from pathlib import Path
 
 import streamlit as st
 
-# ---------- Page config ----------
 st.set_page_config(
     page_title="Blind Box Value Maximizer",
     page_icon="🎁",
@@ -12,116 +11,173 @@ st.set_page_config(
     initial_sidebar_state="collapsed",
 )
 
-# ---------- Styling ----------
 st.markdown(
     """
     <style>
+    header[data-testid="stHeader"] {display:none;}
     .stApp {
-        background: radial-gradient(circle at top, #1e1b4b 0%, #0f172a 45%, #020617 100%);
-        color: white;
+        background: #f8fafc;
+        color: #0f172a;
     }
     .block-container {
-        padding-top: 2rem;
+        padding-top: 1rem;
         padding-bottom: 2rem;
-        max-width: 1200px;
+        max-width: 1220px;
     }
-    .hero {
-        background: linear-gradient(135deg, rgba(99,102,241,0.22), rgba(16,185,129,0.16));
-        border: 1px solid rgba(255,255,255,0.10);
-        border-radius: 28px;
-        padding: 28px;
-        margin-bottom: 18px;
-        box-shadow: 0 20px 60px rgba(0,0,0,0.20);
-    }
-    .glass {
-        background: rgba(15,23,42,0.70);
-        border: 1px solid rgba(255,255,255,0.10);
-        border-radius: 24px;
-        padding: 20px;
-        box-shadow: 0 12px 30px rgba(0,0,0,0.18);
-    }
-    .stat {
-        background: rgba(255,255,255,0.05);
-        border: 1px solid rgba(255,255,255,0.08);
-        border-radius: 20px;
-        padding: 16px 18px;
-        margin-bottom: 10px;
-    }
-    .stat-label {
-        font-size: 0.76rem;
-        text-transform: uppercase;
-        letter-spacing: 0.16em;
-        color: #cbd5e1;
-        margin-bottom: 6px;
-    }
-    .stat-value {
-        font-size: 1.55rem;
-        font-weight: 800;
-        color: white;
-    }
-    .choice-card {
-        background: rgba(15,23,42,0.82);
-        border: 1px solid rgba(255,255,255,0.10);
-        border-radius: 24px;
-        padding: 18px;
-        min-height: 100%;
-    }
-    .pill-good, .pill-bad, .pill-neutral {
-        display: inline-block;
-        padding: 8px 14px;
-        border-radius: 999px;
-        font-weight: 700;
-        font-size: 0.92rem;
-        margin-top: 6px;
-    }
-    .pill-good { background: rgba(16,185,129,0.16); color: #6ee7b7; }
-    .pill-bad { background: rgba(244,63,94,0.16); color: #fda4af; }
-    .pill-neutral { background: rgba(56,189,248,0.16); color: #7dd3fc; }
-    .step {
-        background: rgba(255,255,255,0.04);
-        border: 1px solid rgba(255,255,255,0.08);
-        border-radius: 18px;
-        padding: 16px;
-        margin-bottom: 12px;
-    }
-    .small-muted {
-        color: #cbd5e1;
-        font-size: 0.95rem;
-    }
-    .center-title {
+    h1, h2, h3 { color: #0f172a; }
+    p, li { color: #475569; }
+    .hero-title {
         text-align: center;
-        font-size: 2.9rem;
+        font-size: 3rem;
         font-weight: 900;
         line-height: 1.05;
+        color: #0f172a;
         margin-bottom: 0.5rem;
-        color: white;
     }
-    .center-sub {
+    .hero-sub {
         text-align: center;
-        font-size: 1.08rem;
-        color: #dbeafe;
         max-width: 860px;
-        margin: 0 auto 1.5rem auto;
+        margin: 0 auto 1.25rem auto;
+        color: #475569;
+        font-size: 1.08rem;
     }
-    .result-box {
-        background: linear-gradient(135deg, rgba(15,23,42,0.92), rgba(30,41,59,0.88));
-        border: 1px solid rgba(255,255,255,0.10);
-        border-radius: 24px;
-        padding: 22px;
+    .eyebrow {
+        font-size: 0.9rem;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: #2563eb;
+        font-weight: 700;
+        margin-bottom: 0.4rem;
     }
-    .summary-box {
-        background: rgba(255,255,255,0.04);
-        border: 1px solid rgba(255,255,255,0.08);
+    .big-title {
+        font-size: 3rem;
+        font-weight: 900;
+        line-height: 1.05;
+        color: #0f172a;
+        margin-bottom: 0.5rem;
+    }
+    .muted {
+        color: #475569;
+        font-size: 1rem;
+    }
+    .chip {
+        display:inline-block;
+        background:#eef2ff;
+        color:#4338ca;
+        border:1px solid #c7d2fe;
+        border-radius:999px;
+        padding:6px 12px;
+        font-size:0.8rem;
+        font-weight:700;
+        margin-bottom:10px;
+    }
+    .metric-card {
+        background: white;
+        border: 1px solid #dbeafe;
+        border-radius: 22px;
+        padding: 18px 20px;
+        box-shadow: 0 8px 26px rgba(15,23,42,0.04);
+        min-height: 120px;
+    }
+    .metric-label {
+        font-size: 0.82rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: #64748b;
+        margin-bottom: 12px;
+        font-weight: 700;
+    }
+    .metric-value {
+        font-size: 2.25rem;
+        font-weight: 900;
+        color: #0f172a;
+    }
+    .pill-good, .pill-bad, .pill-neutral {
+        display:inline-block;
+        padding:8px 14px;
+        border-radius:999px;
+        font-weight:800;
+        font-size:0.95rem;
+    }
+    .pill-good { background:#dcfce7; color:#166534; }
+    .pill-bad { background:#fee2e2; color:#991b1b; }
+    .pill-neutral { background:#e0f2fe; color:#075985; }
+    .math-step {
+        background:#f8fafc;
+        border:1px solid #e2e8f0;
+        border-radius:18px;
+        padding:16px;
+        margin-bottom:12px;
+        color:#334155;
+    }
+    .result-row {
+        background: white;
+        border:1px solid #e2e8f0;
         border-radius: 20px;
-        padding: 16px;
+        padding: 14px 18px;
+        margin-bottom: 12px;
+        box-shadow: 0 6px 20px rgba(15,23,42,0.04);
+    }
+    .result-head {
+        font-size: 0.78rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: #64748b;
+        font-weight: 700;
+        margin-bottom: 6px;
+    }
+    .result-main {
+        font-size: 1.05rem;
+        font-weight: 800;
+        color: #0f172a;
+    }
+    .stButton > button {
+        width: 100%;
+        border-radius: 16px;
+        border: 1px solid #2563eb;
+        background: #2563eb;
+        color: white !important;
+        font-weight: 800;
+        padding: 0.85rem 1rem;
+        box-shadow: 0 8px 22px rgba(37,99,235,0.18);
+    }
+    .stButton > button:hover {
+        background: #1d4ed8;
+        border-color: #1d4ed8;
+        color: white !important;
+    }
+    .stButton > button[kind="secondary"] {
+        background: white;
+        color: #0f172a !important;
+        border: 1px solid #cbd5e1;
+        box-shadow: none;
+    }
+    .stButton > button[kind="secondary"]:hover {
+        background: #f8fafc;
+        color: #0f172a !important;
+        border-color: #94a3b8;
+    }
+    div[data-testid="stVerticalBlockBorderWrapper"] {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 24px;
+        padding: 18px;
+        box-shadow: 0 10px 28px rgba(15,23,42,0.05);
+    }
+    .stImage img {
+        border-radius: 18px;
+    }
+    .stAlert {
+        display:none;
     }
     </style>
     """,
     unsafe_allow_html=True,
 )
 
+ASSETS = Path(__file__).parent / "assets"
 
-# ---------- Helpers ----------
+
 def currency(x: float) -> str:
     return f"${x:,.2f}"
 
@@ -152,20 +208,12 @@ def fairness_class(ev: float, cost: float) -> str:
     return "pill-bad"
 
 
-def scenario_math(scenario):
-    ev = ev_of(scenario["payouts"])
-    best = best_outcome(scenario["payouts"])
-    blind_box_net = ev - scenario["blind_box_cost"]
-    direct_net = best["value"] - scenario["direct_buy_price"]
-    optimal = "Blind Box" if blind_box_net > direct_net else "Direct Buy"
-    return {
-        "ev": ev,
-        "best": best,
-        "blind_box_net": blind_box_net,
-        "direct_net": direct_net,
-        "optimal": optimal,
-        "fairness": fairness_label(ev, scenario["blind_box_cost"]),
-    }
+def random_int(low: int, high: int) -> int:
+    low = int(round(low))
+    high = int(round(high))
+    if low > high:
+        low, high = high, low
+    return random.randint(low, high)
 
 
 def weighted_random_choice(payouts):
@@ -183,35 +231,116 @@ def load_img(filename: str):
     return str(path) if path.exists() else None
 
 
-def image_or_placeholder(filename: str, caption: str, use_container_width=True, height=None):
+def show_image(filename: str, caption: str):
     path = load_img(filename)
     if path:
-        st.image(path, caption=caption, use_container_width=use_container_width)
+        st.image(path, caption=caption, use_container_width=True)
     else:
-        st.markdown(
-            f"""
-            <div class="summary-box" style="min-height:{height or 220}px; display:flex; align-items:center; justify-content:center; text-align:center;">
-                <div>
-                    <div style="font-size:2rem;">🖼️</div>
-                    <div style="font-weight:700; color:white; margin-top:6px;">{caption}</div>
-                    <div class="small-muted" style="margin-top:6px;">Add assets/{filename}</div>
-                </div>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
+        st.info(f"Add assets/{filename}")
 
 
-def stat_card(label: str, value: str):
+def metric_card(label: str, value: str):
     st.markdown(
         f"""
-        <div class="stat">
-            <div class="stat-label">{label}</div>
-            <div class="stat-value">{value}</div>
+        <div class="metric-card">
+            <div class="metric-label">{label}</div>
+            <div class="metric-value">{value}</div>
         </div>
         """,
         unsafe_allow_html=True,
     )
+
+
+def result_pill(text: str, cls: str):
+    st.markdown(f'<div class="{cls}">{text}</div>', unsafe_allow_html=True)
+
+
+def scenario_math(scenario):
+    ev = ev_of(scenario["payouts"])
+    best = best_outcome(scenario["payouts"])
+    blind_box_net = ev - scenario["blind_box_cost"]
+    direct_net = best["value"] - scenario["direct_buy_price"]
+    optimal = "Blind Box" if blind_box_net > direct_net else "Direct Buy"
+    return {
+        "ev": ev,
+        "best": best,
+        "blind_box_net": blind_box_net,
+        "direct_net": direct_net,
+        "optimal": optimal,
+        "fairness": fairness_label(ev, scenario["blind_box_cost"]),
+    }
+
+
+def multi_math(scenario):
+    single_ev = ev_of(scenario["payouts"])
+    best = best_outcome(scenario["payouts"])
+    option_rows = []
+    for k in [1, 2, 3, 4]:
+        total_ev = k * single_ev
+        total_cost = k * scenario["single_box_cost"]
+        net = total_ev - total_cost
+        option_rows.append({
+            "label": f"{k} Blind Box" + ("es" if k > 1 else ""),
+            "k": k,
+            "ev": total_ev,
+            "cost": total_cost,
+            "net": net,
+        })
+    direct_value = best["value"]
+    direct_net = direct_value - scenario["direct_buy_price"]
+    option_rows.append({
+        "label": "Direct Buy",
+        "k": 0,
+        "ev": direct_value,
+        "cost": scenario["direct_buy_price"],
+        "net": direct_net,
+    })
+    optimal_row = max(option_rows, key=lambda x: x["net"])
+    return {
+        "single_ev": single_ev,
+        "best": best,
+        "options": option_rows,
+        "optimal": optimal_row["label"],
+    }
+
+
+def build_randomized_single(template: dict):
+    scenario = deepcopy(template)
+    payouts = scenario["payouts"]
+    ev = ev_of(payouts)
+    best = best_outcome(payouts)
+    if scenario["target_optimal"] == "Blind Box":
+        blind_net = random_int(5, 10)
+        direct_net = random_int(-2, blind_net - 2)
+    else:
+        direct_net = random_int(4, 9)
+        blind_net = random_int(-4, direct_net - 2)
+    scenario["blind_box_cost"] = max(1, random_int(ev - blind_net - 0.49, ev - blind_net + 0.49))
+    scenario["direct_buy_price"] = max(1, random_int(best["value"] - direct_net - 0.49, best["value"] - direct_net + 0.49))
+    return scenario
+
+
+def build_randomized_multi(template: dict):
+    scenario = deepcopy(template)
+    single_ev = ev_of(scenario["payouts"])
+    best_val = best_outcome(scenario["payouts"])["value"]
+    if scenario["target_optimal"] == "Direct Buy":
+        box_margin = random_int(-3, 1)
+        direct_margin = random_int(12, 22)
+    else:
+        box_margin = random_int(4, 8)
+        direct_margin = random_int(-3, 2)
+    scenario["single_box_cost"] = max(1, random_int(single_ev - box_margin - 0.49, single_ev - box_margin + 0.49))
+    scenario["direct_buy_price"] = max(1, random_int(best_val - direct_margin - 0.49, best_val - direct_margin + 0.49))
+    return scenario
+
+
+def generate_single_scenarios():
+    return [build_randomized_single(t) for t in SINGLE_TEMPLATES]
+
+
+def generate_multi_scenarios():
+    return [build_randomized_multi(t) for t in MULTI_TEMPLATES]
 
 
 def init_state():
@@ -221,8 +350,9 @@ def init_state():
         "scenario_index": 0,
         "history": [],
         "selected_choice": None,
-        "resolved_outcome": None,
-        "session_scenarios": [],
+        "resolved": None,
+        "single_scenarios": [],
+        "multi_scenarios": [],
     }
     for k, v in defaults.items():
         if k not in st.session_state:
@@ -230,40 +360,10 @@ def init_state():
 
 
 def reset_all():
-    for k in ["screen", "mode", "scenario_index", "history", "selected_choice", "resolved_outcome", "session_scenarios"]:
+    for k in ["screen", "mode", "scenario_index", "history", "selected_choice", "resolved", "single_scenarios", "multi_scenarios"]:
         if k in st.session_state:
             del st.session_state[k]
     init_state()
-
-
-def random_int(low: int, high: int) -> int:
-    low = int(round(low))
-    high = int(round(high))
-    if low > high:
-        low, high = high, low
-    return random.randint(low, high)
-
-
-def build_randomized_scenario(template: dict):
-    scenario = deepcopy(template)
-    payouts = scenario["payouts"]
-    ev = ev_of(payouts)
-    best = best_outcome(payouts)
-
-    if scenario["target_optimal"] == "Blind Box":
-        blind_net = random_int(5, 11)
-        direct_net = random_int(-3, blind_net - 2)
-    else:
-        direct_net = random_int(4, 10)
-        blind_net = random_int(-4, direct_net - 2)
-
-    scenario["blind_box_cost"] = max(1, random_int(ev - blind_net - 0.49, ev - blind_net + 0.49))
-    scenario["direct_buy_price"] = max(1, random_int(best["value"] - direct_net - 0.49, best["value"] - direct_net + 0.49))
-    return scenario
-
-
-def generate_session_scenarios():
-    return [build_randomized_scenario(template) for template in MAIN_SCENARIO_TEMPLATES]
 
 
 def start_mode(mode: str):
@@ -271,12 +371,23 @@ def start_mode(mode: str):
     st.session_state.scenario_index = 0
     st.session_state.history = []
     st.session_state.selected_choice = None
-    st.session_state.resolved_outcome = None
-    st.session_state.session_scenarios = generate_session_scenarios()
+    st.session_state.resolved = None
+    st.session_state.single_scenarios = generate_single_scenarios()
+    st.session_state.multi_scenarios = generate_multi_scenarios()
     st.session_state.screen = "choice"
 
 
-def resolve_choice(choice: str, scenario: dict):
+def current_scenario():
+    if st.session_state.mode == "demo":
+        return DEMO_SCENARIO
+    if st.session_state.mode == "game":
+        return st.session_state.single_scenarios[st.session_state.scenario_index]
+    if st.session_state.mode == "multi":
+        return st.session_state.multi_scenarios[st.session_state.scenario_index]
+    return None
+
+
+def resolve_single(choice: str, scenario: dict):
     math = scenario_math(scenario)
     if choice == "Blind Box":
         outcome = weighted_random_choice(scenario["payouts"])
@@ -284,59 +395,68 @@ def resolve_choice(choice: str, scenario: dict):
     else:
         outcome = math["best"]
         cost = scenario["direct_buy_price"]
-
     net = outcome["value"] - cost
-
     st.session_state.selected_choice = choice
-    st.session_state.resolved_outcome = {
-        "outcome": outcome,
-        "cost": cost,
-        "net": net,
-        "math": math,
-    }
-
+    st.session_state.resolved = {"math": math, "outcome": outcome, "cost": cost, "net": net}
     if st.session_state.mode == "game":
-        st.session_state.history.append(
-            {
-                "scenario_title": scenario["title"],
-                "choice": choice,
-                "optimal": math["optimal"],
-                "correct": choice == math["optimal"],
-                "net": net,
-                "outcome": outcome["label"],
-            }
-        )
+        st.session_state.history.append({
+            "scenario": scenario["title"],
+            "choice": choice,
+            "optimal": math["optimal"],
+            "correct": choice == math["optimal"],
+            "net": net,
+            "outcome": outcome["label"],
+        })
+    st.session_state.screen = "math_single"
 
-    st.session_state.screen = "math"
+
+def resolve_multi(choice: str, scenario: dict):
+    math = multi_math(scenario)
+    chosen = next(o for o in math["options"] if o["label"] == choice)
+    if chosen["label"] == "Direct Buy":
+        outcome = {"label": math["best"]["label"], "value": math["best"]["value"], "image": math["best"]["image"]}
+    else:
+        draws = [weighted_random_choice(scenario["payouts"]) for _ in range(chosen["k"])]
+        outcome = {
+            "label": " + ".join(d["label"] for d in draws),
+            "value": sum(d["value"] for d in draws),
+            "image": draws[0]["image"],
+        }
+    cost = chosen["cost"]
+    net = outcome["value"] - cost
+    st.session_state.selected_choice = choice
+    st.session_state.resolved = {"math": math, "outcome": outcome, "cost": cost, "net": net, "chosen": chosen}
+    if st.session_state.mode == "multi":
+        st.session_state.history.append({
+            "scenario": scenario["title"],
+            "choice": choice,
+            "optimal": math["optimal"],
+            "correct": choice == math["optimal"],
+            "net": net,
+            "outcome": outcome["label"],
+        })
+    st.session_state.screen = "math_multi"
 
 
 def next_step():
     if st.session_state.mode == "demo":
         reset_all()
-        st.rerun()
-
-    if st.session_state.scenario_index < len(st.session_state.session_scenarios) - 1:
+        return
+    total = len(st.session_state.multi_scenarios) if st.session_state.mode == "multi" else len(st.session_state.single_scenarios)
+    if st.session_state.scenario_index < total - 1:
         st.session_state.scenario_index += 1
         st.session_state.selected_choice = None
-        st.session_state.resolved_outcome = None
+        st.session_state.resolved = None
         st.session_state.screen = "choice"
     else:
         st.session_state.screen = "summary"
-    st.rerun()
 
 
-def running_score():
-    hist = st.session_state.history
-    correct = sum(1 for h in hist if h["correct"])
-    net = sum(h["net"] for h in hist)
+def score_summary():
+    correct = sum(1 for h in st.session_state.history if h["correct"])
+    net = sum(h["net"] for h in st.session_state.history)
     return correct, net
 
-
-# ---------- Assets ----------
-ASSETS = Path(__file__).parent / "assets"
-
-# Expected image files:
-# blindbox.jpg, direct_buy.jpg, common_a.jpg, common_b.jpg, rare.jpg, secret.jpg
 
 DEMO_SCENARIO = {
     "title": "Demo Game",
@@ -353,14 +473,13 @@ DEMO_SCENARIO = {
     ],
 }
 
-MAIN_SCENARIO_TEMPLATES = [
+SINGLE_TEMPLATES = [
     {
         "title": "Starter Shelf",
         "subtitle": "One rare item makes the gamble tempting.",
-        "blind_box_cost": 20,
-        "direct_buy_price": 32,
         "blind_box_image": "blindbox.jpg",
         "direct_image": "direct_buy.jpg",
+        "target_optimal": "Blind Box",
         "payouts": [
             {"label": "Labubu Common A", "value": 12, "probability": 0.35, "image": "common_a.jpg"},
             {"label": "Labubu Common B", "value": 15, "probability": 0.30, "image": "common_b.jpg"},
@@ -369,12 +488,24 @@ MAIN_SCENARIO_TEMPLATES = [
         ],
     },
     {
-        "title": "Collector Rush",
-        "subtitle": "High hype, but most outcomes are weaker than they seem.",
-        "blind_box_cost": 22,
-        "direct_buy_price": 40,
+        "title": "Arbitrage Alert",
+        "subtitle": "The blind box is surprisingly underpriced.",
         "blind_box_image": "blindbox.jpg",
         "direct_image": "direct_buy.jpg",
+        "target_optimal": "Blind Box",
+        "payouts": [
+            {"label": "Labubu Common A", "value": 14, "probability": 0.20, "image": "common_a.jpg"},
+            {"label": "Labubu Common B", "value": 18, "probability": 0.25, "image": "common_b.jpg"},
+            {"label": "Labubu Rare", "value": 40, "probability": 0.35, "image": "rare.jpg"},
+            {"label": "Labubu Secret", "value": 70, "probability": 0.20, "image": "secret.jpg"},
+        ],
+    },
+    {
+        "title": "Collector Rush",
+        "subtitle": "High hype, but most outcomes are weaker than they seem.",
+        "blind_box_image": "blindbox.jpg",
+        "direct_image": "direct_buy.jpg",
+        "target_optimal": "Direct Buy",
         "payouts": [
             {"label": "Labubu Common A", "value": 8, "probability": 0.32, "image": "common_a.jpg"},
             {"label": "Labubu Common B", "value": 11, "probability": 0.33, "image": "common_b.jpg"},
@@ -384,11 +515,10 @@ MAIN_SCENARIO_TEMPLATES = [
     },
     {
         "title": "Balanced Box",
-        "subtitle": "This one is close enough that intuition can easily fail.",
-        "blind_box_cost": 18,
-        "direct_buy_price": 28,
+        "subtitle": "Close enough that intuition can easily fail.",
         "blind_box_image": "blindbox.jpg",
         "direct_image": "direct_buy.jpg",
+        "target_optimal": "Direct Buy",
         "payouts": [
             {"label": "Labubu Common A", "value": 10, "probability": 0.25, "image": "common_a.jpg"},
             {"label": "Labubu Common B", "value": 18, "probability": 0.35, "image": "common_b.jpg"},
@@ -396,268 +526,334 @@ MAIN_SCENARIO_TEMPLATES = [
             {"label": "Labubu Secret", "value": 50, "probability": 0.15, "image": "secret.jpg"},
         ],
     },
+]
+
+MULTI_TEMPLATES = [
     {
-        "title": "Arbitrage Alert",
-        "subtitle": "The blind box is surprisingly underpriced.",
-        "blind_box_cost": 16,
-        "direct_buy_price": 34,
+        "title": "Quantity Challenge A",
+        "subtitle": "Choose 1, 2, 3, or 4 blind boxes, or take the direct buy instead.",
+        "target_optimal": "Direct Buy",
         "blind_box_image": "blindbox.jpg",
         "direct_image": "direct_buy.jpg",
-        "payouts": [
-            {"label": "Labubu Common A", "value": 14, "probability": 0.20, "image": "common_a.jpg"},
-            {"label": "Labubu Common B", "value": 18, "probability": 0.25, "image": "common_b.jpg"},
-            {"label": "Labubu Rare", "value": 40, "probability": 0.35, "image": "rare.jpg"},
-            {"label": "Labubu Secret", "value": 70, "probability": 0.20, "image": "secret.jpg"},
-        ],
+        "payouts": DEMO_SCENARIO["payouts"],
+    },
+    {
+        "title": "Quantity Challenge B",
+        "subtitle": "The blind-box side is stronger here on expected value. Which quantity wins?",
+        "target_optimal": "4 Blind Boxes",
+        "blind_box_image": "blindbox.jpg",
+        "direct_image": "direct_buy.jpg",
+        "payouts": DEMO_SCENARIO["payouts"],
     },
 ]
 
-MAIN_SCENARIO_TEMPLATES[0]["target_optimal"] = "Blind Box"
-MAIN_SCENARIO_TEMPLATES[1]["target_optimal"] = "Blind Box"
-MAIN_SCENARIO_TEMPLATES[2]["target_optimal"] = "Direct Buy"
-MAIN_SCENARIO_TEMPLATES[3]["target_optimal"] = "Direct Buy"
-
-
-# ---------- UI Screens ----------
 init_state()
-
-if st.session_state.mode == "demo":
-    current_scenario = DEMO_SCENARIO
-elif st.session_state.mode == "game":
-    if not st.session_state.session_scenarios:
-        st.session_state.session_scenarios = generate_session_scenarios()
-    current_scenario = st.session_state.session_scenarios[st.session_state.scenario_index]
-else:
-    current_scenario = None
-
+if not st.session_state.single_scenarios:
+    st.session_state.single_scenarios = generate_single_scenarios()
+if not st.session_state.multi_scenarios:
+    st.session_state.multi_scenarios = generate_multi_scenarios()
+scenario = current_scenario()
 
 if st.session_state.screen == "intro":
-    st.markdown('<div class="hero">', unsafe_allow_html=True)
-    st.markdown('<div class="center-title">Blind Box Value Maximizer</div>', unsafe_allow_html=True)
-    st.markdown(
-        '<div class="center-sub">Use Labubu-style blind boxes to learn expected value, fairness, arbitrage, and decision-making under uncertainty. Start with a demo or jump into the full game.</div>',
-        unsafe_allow_html=True,
-    )
-    c1, c2, c3 = st.columns(3)
-    with c1:
-        stat_card("Core idea", "Expected Value")
-    with c2:
-        stat_card("Compare", "Risk vs Certainty")
-    with c3:
-        stat_card("Question", "Fair or Not?")
-    st.markdown('</div>', unsafe_allow_html=True)
+    st.markdown('<div class="hero-title">Blind Box Value Maximizer</div>', unsafe_allow_html=True)
+    st.markdown('<div class="hero-sub">Use Labubu-style blind boxes to learn expected value, fairness, and decision-making under uncertainty. Start with a demo, the full single-box game, or the quantity-choice challenge.</div>', unsafe_allow_html=True)
 
-    left, right = st.columns(2, gap="large")
-    with left:
-        st.markdown('<div class="glass">', unsafe_allow_html=True)
-        st.subheader("🎁 Demo Game")
-        st.write("Play one polished example first. Make a choice, then go to a separate math reveal screen that explains whether you were right or wrong.")
-        image_or_placeholder("blindbox.jpg", "Demo preview", height=280)
-        if st.button("Start Demo Game", use_container_width=True, type="primary"):
-            start_mode("demo")
-            st.rerun()
-        st.markdown('</div>', unsafe_allow_html=True)
-
-    with right:
-        st.markdown('<div class="glass">', unsafe_allow_html=True)
-        st.subheader("🏆 Blind Box Value Maximization Game")
-        st.write("Play all rounds, compare intuition against expected value, and track your score and total net performance.")
-        image_or_placeholder("direct_buy.jpg", "Full game preview", height=280)
-        if st.button("Start Full Game", use_container_width=True):
-            start_mode("game")
-            st.rerun()
-        st.markdown('</div>', unsafe_allow_html=True)
-
-elif st.session_state.screen == "choice":
-    math = scenario_math(current_scenario)
-
-    top_left, top_right = st.columns([1, 1])
-    with top_left:
-        if st.button("← Main Menu"):
-            reset_all()
-            st.rerun()
-    with top_right:
-        if st.session_state.mode == "demo":
-            st.markdown('<div style="text-align:right; padding-top:8px; color:#dbeafe;">Demo Round</div>', unsafe_allow_html=True)
-        else:
-            st.markdown(
-                f'<div style="text-align:right; padding-top:8px; color:#dbeafe;">Round {st.session_state.scenario_index + 1} of {len(st.session_state.session_scenarios or MAIN_SCENARIO_TEMPLATES)}</div>',
-                unsafe_allow_html=True,
-            )
-
-    st.markdown('<div class="hero">', unsafe_allow_html=True)
-    st.markdown(f"<div style='font-size:0.85rem; text-transform:uppercase; letter-spacing:0.2em; color:#93c5fd;'>Choose First</div>", unsafe_allow_html=True)
-    st.markdown(f"<div style='font-size:2.6rem; font-weight:900; color:white; line-height:1.05; margin-top:4px;'>{current_scenario['title']}</div>", unsafe_allow_html=True)
-    st.markdown(f"<div class='small-muted' style='margin-top:10px;'>{current_scenario['subtitle']}</div>", unsafe_allow_html=True)
-    a, b = st.columns(2)
-    with a:
-        stat_card("Blind Box Cost", currency(current_scenario["blind_box_cost"]))
-    with b:
-        stat_card("Direct Buy", currency(current_scenario["direct_buy_price"]))
-    st.markdown('</div>', unsafe_allow_html=True)
-
-    col1, col2 = st.columns(2, gap="large")
-
-    with col1:
-        st.markdown('<div class="choice-card">', unsafe_allow_html=True)
-        image_or_placeholder(current_scenario["blind_box_image"], "Blind Box")
-        st.markdown("### Blind Box")
-        st.write(f"Pay **{currency(current_scenario['blind_box_cost'])}** and receive one of the following figures at random. No expected value is shown yet — trust your intuition first.")
-        for item in current_scenario["payouts"]:
-            st.markdown(
-                f"- **{item['label']}** · {currency(item['value'])} · {(item['probability'] * 100):.0f}%"
-            )
-        if st.button("Choose Blind Box", use_container_width=True, type="primary"):
-            resolve_choice("Blind Box", current_scenario)
-            st.rerun()
-        st.markdown('</div>', unsafe_allow_html=True)
-
-    with col2:
-        st.markdown('<div class="choice-card">', unsafe_allow_html=True)
-        image_or_placeholder(current_scenario["direct_image"], "Direct Buy")
-        st.markdown("### Direct Buy")
-        st.write(f"Pay **{currency(current_scenario['direct_buy_price'])}** and lock in the highest-value figure immediately. The math comparison is revealed only after you choose.")
-        best = math["best"]
-        st.markdown(
-            f"**Guaranteed item:** {best['label']}  \\\n**Market value:** {currency(best['value'])}"
-        )
-        if st.button("Choose Direct Buy", use_container_width=True):
-            resolve_choice("Direct Buy", current_scenario)
-            st.rerun()
-        st.markdown('</div>', unsafe_allow_html=True)
-
-elif st.session_state.screen == "math":
-    result = st.session_state.resolved_outcome
-    math = result["math"]
-    outcome = result["outcome"]
-    choice = st.session_state.selected_choice
-    was_correct = choice == math["optimal"]
-    correct_count, net_total = running_score()
-
-    left_top, right_top = st.columns([1, 1])
-    with left_top:
-        if st.button("← Main Menu"):
-            reset_all()
-            st.rerun()
-    with right_top:
-        if st.session_state.mode == "game":
-            st.markdown(
-                f"<div style='text-align:right; padding-top:8px; color:#dbeafe;'>Score: {correct_count} correct · {currency(net_total)} total net</div>",
-                unsafe_allow_html=True,
-            )
-
-    main_left, main_right = st.columns([1.25, 0.75], gap="large")
-
-    with main_left:
-        st.markdown('<div class="result-box">', unsafe_allow_html=True)
-        st.markdown(
-            f"<div style='font-size:0.82rem; text-transform:uppercase; letter-spacing:0.2em; color:#cbd5e1;'>Math Reveal</div>",
-            unsafe_allow_html=True,
-        )
-        st.markdown(
-            f"<div style='font-size:2.4rem; font-weight:900; color:white; margin-top:6px;'>{'You were right' if was_correct else 'Not quite'}</div>",
-            unsafe_allow_html=True,
-        )
-        st.markdown(
-            f"<div class='small-muted' style='margin-top:10px;'>You chose <b>{choice}</b>. The optimal long-run decision was <b>{math['optimal']}</b>.</div>",
-            unsafe_allow_html=True,
-        )
-        pill_cls = "pill-good" if was_correct else "pill-bad"
-        pill_text = "Correct Decision" if was_correct else "Suboptimal Decision"
-        st.markdown(f"<div class='{pill_cls}'>{pill_text}</div>", unsafe_allow_html=True)
-        st.markdown('</div>', unsafe_allow_html=True)
-
-        a, b, c, d = st.columns(4)
-        with a:
-            stat_card("Expected Value", currency(math["ev"]))
-        with b:
-            stat_card("Blind Box Net", currency(math["blind_box_net"]))
-        with c:
-            stat_card("Direct Buy Net", currency(math["direct_net"]))
-        with d:
-            stat_card("Your Result", currency(result["net"]))
-
-        st.markdown('<div class="glass">', unsafe_allow_html=True)
-        st.subheader("Why?")
-        eq_terms = " + ".join([f"{p['value']}×{p['probability']}" for p in current_scenario["payouts"]])
-        st.markdown(
-            f"""
-            <div class="step">
-                <b>Step 1:</b> Compute the blind box expected value.<br><br>
-                E(X) = {eq_terms} = <b>{currency(math['ev'])}</b>
-            </div>
-            <div class="step">
-                <b>Step 2:</b> Subtract the blind box cost.<br><br>
-                {currency(math['ev'])} - {currency(current_scenario['blind_box_cost'])} = <b>{currency(math['blind_box_net'])}</b>
-            </div>
-            <div class="step">
-                <b>Step 3:</b> Compute the guaranteed direct-buy net.<br><br>
-                {currency(math['best']['value'])} - {currency(current_scenario['direct_buy_price'])} = <b>{currency(math['direct_net'])}</b>
-            </div>
-            <div class="step">
-                <b>Step 4:</b> Compare the two net values.<br><br>
-                Since <b>{currency(math['blind_box_net'])}</b> {'>' if math['blind_box_net'] > math['direct_net'] else '<='} <b>{currency(math['direct_net'])}</b>, the better long-run decision is <b>{math['optimal']}</b>.
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
-        st.markdown('</div>', unsafe_allow_html=True)
-
-    with main_right:
-        st.markdown('<div class="glass">', unsafe_allow_html=True)
-        image_or_placeholder(outcome["image"], outcome["label"])
-        st.subheader(f"You got: {outcome['label']}")
-        stat_card("Market Value", currency(outcome["value"]))
-        stat_card("Cost Paid", currency(result["cost"]))
-        stat_card("Net Result", currency(result["net"]))
-        st.markdown(
-            f"<div class='{fairness_class(math['ev'], current_scenario['blind_box_cost'])}'>{math['fairness']}</div>",
-            unsafe_allow_html=True,
-        )
-        st.markdown('</div>', unsafe_allow_html=True)
-
-        st.markdown('<div class="glass">', unsafe_allow_html=True)
-        st.subheader("Possible Blind Box Outcomes")
-        for item in current_scenario["payouts"]:
-            exp = st.expander(f"{item['label']} · {currency(item['value'])} · {(item['probability'] * 100):.0f}%")
-            with exp:
-                image_or_placeholder(item["image"], item["label"])
-        st.markdown('</div>', unsafe_allow_html=True)
-
-        if st.button("Next", use_container_width=True, type="primary"):
-            next_step()
-
-elif st.session_state.screen == "summary":
-    correct_count, net_total = running_score()
-
-    st.markdown('<div class="hero">', unsafe_allow_html=True)
-    st.markdown("<div class='center-title'>Final Results</div>", unsafe_allow_html=True)
-    st.markdown(
-        "<div class='center-sub'>You finished the full Blind Box Value Maximization Game. Review your performance, then play again or change the images and values for your presentation.</div>",
-        unsafe_allow_html=True,
-    )
     a, b, c = st.columns(3)
     with a:
-        stat_card("Correct Choices", f"{correct_count}/{len(st.session_state.session_scenarios)}")
+        metric_card("Core Idea", "Expected Value")
     with b:
-        stat_card("Total Net", currency(net_total))
+        metric_card("Compare", "Risk vs Certainty")
     with c:
-        stat_card("Main Goal", "Beat intuition with math")
-    st.markdown('</div>', unsafe_allow_html=True)
+        metric_card("Question", "Fair or Not?")
 
-    st.markdown('<div class="glass">', unsafe_allow_html=True)
-    st.subheader("Round-by-Round Results")
-    st.dataframe(st.session_state.history, use_container_width=True, hide_index=True)
-    st.markdown('</div>', unsafe_allow_html=True)
+    c1, c2, c3 = st.columns(3, gap="large")
+    with c1:
+        with st.container(border=True):
+            st.markdown('<div class="chip">Option 1</div>', unsafe_allow_html=True)
+            st.markdown("### Demo Game")
+            st.write("Demo round. Make a choice, then see the math reveal on the next screen.")
+            show_image("blindbox.jpg", "Demo preview")
+            if st.button("Start Demo Game", key="start_demo"):
+                start_mode("demo")
+                st.rerun()
+    with c2:
+        with st.container(border=True):
+            st.markdown('<div class="chip">Option 2</div>', unsafe_allow_html=True)
+            st.markdown("### Full Game")
+            st.write("Play four randomized single-box rounds with a balanced split of optimal answers.")
+            show_image("direct_buy.jpg", "Full game preview")
+            if st.button("Start Full Game", key="start_full"):
+                start_mode("game")
+                st.rerun()
+    with c3:
+        with st.container(border=True):
+            st.markdown('<div class="chip">Option 3</div>', unsafe_allow_html=True)
+            st.markdown("### Quantity Challenge")
+            st.write("Choose between 1, 2, 3, or 4 blind boxes and compare them against direct buy.")
+            show_image("rare.jpg", "Quantity challenge preview")
+            if st.button("Start Quantity Challenge", key="start_multi"):
+                start_mode("multi")
+                st.rerun()
 
-    col1, col2, col3 = st.columns(3)
-    with col1:
-        st.markdown('<div class="summary-box"><h4>Expected Value</h4><div class="small-muted">A higher average long-run return matters more than one lucky outcome.</div></div>', unsafe_allow_html=True)
-    with col2:
-        st.markdown('<div class="summary-box"><h4>Risk vs Certainty</h4><div class="small-muted">Sometimes the guaranteed purchase is better. Sometimes the gamble is underpriced.</div></div>', unsafe_allow_html=True)
-    with col3:
-        st.markdown('<div class="summary-box"><h4>Fairness & Arbitrage</h4><div class="small-muted">A game is favourable when expected value clearly beats the price paid.</div></div>', unsafe_allow_html=True)
+elif st.session_state.screen == "choice":
+    top1, top2 = st.columns([1, 1])
+    with top1:
+        if st.button("← Main Menu", key="menu_choice", type="secondary", use_container_width=False):
+            reset_all()
+            st.rerun()
+    with top2:
+        label = "Demo Round" if st.session_state.mode == "demo" else (
+            f"Round {st.session_state.scenario_index + 1} of {len(st.session_state.single_scenarios)}" if st.session_state.mode == "game" else f"Round {st.session_state.scenario_index + 1} of {len(st.session_state.multi_scenarios)}"
+        )
+        st.markdown(f'<div style="text-align:right; color:#64748b; padding-top:8px;">{label}</div>', unsafe_allow_html=True)
 
-    if st.button("Play Again", use_container_width=True, type="primary"):
+    st.markdown('<div class="eyebrow">Choose First</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="big-title">{scenario["title"]}</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="muted">{scenario["subtitle"]}</div>', unsafe_allow_html=True)
+    st.write("")
+
+    if st.session_state.mode == "multi":
+        mm = multi_math(scenario)
+        a, b = st.columns(2)
+        with a:
+            metric_card("Per Box Cost", currency(scenario["single_box_cost"]))
+        with b:
+            metric_card("Direct Buy", currency(scenario["direct_buy_price"]))
+
+        st.write("")
+        st.markdown("### Possible Box Outcomes")
+        st.markdown("<div class='muted'>Each blind box is an independent draw from the following 4 possible Labubu figures.</div>", unsafe_allow_html=True)
+        legend_cols = st.columns(4, gap="small")
+        for col, item in zip(legend_cols, scenario["payouts"]):
+            with col:
+                with st.container(border=True):
+                    show_image(item["image"], item["label"])
+                    st.markdown(f"**{item['label']}**")
+                    st.write(f"Value: **{currency(item['value'])}**")
+                    st.write(f"Chance: **{(item['probability'] * 100):.0f}%**")
+
+        st.write("")
+        cols = st.columns(5, gap="small")
+        option_labels = ["1 Blind Box", "2 Blind Boxes", "3 Blind Boxes", "4 Blind Boxes", "Direct Buy"]
+        for col, option_label in zip(cols, option_labels):
+            with col:
+                with st.container(border=True):
+                    st.markdown(f"### {option_label}")
+                    if option_label == "Direct Buy":
+                        show_image(scenario["direct_image"], option_label)
+                        st.write("Direct buy guarantees the highest-value figure immediately.")
+                        st.write(f"Guaranteed item: **{mm['best']['label']}**")
+                        st.write(f"Price: **{currency(scenario['direct_buy_price'])}**")
+                        if st.button("Choose", key=f"choose_{option_label}"):
+                            resolve_multi(option_label, scenario)
+                            st.rerun()
+                    else:
+                        k = int(option_label.split()[0])
+                        show_image(scenario["blind_box_image"], option_label)
+                        st.write(f"{k} independent draws")
+                        st.write("Each box can contain any one of the 4 figures shown above.")
+                        st.write(f"Total cost: **{currency(k * scenario['single_box_cost'])}**")
+                        if st.button("Choose", key=f"choose_{option_label}"):
+                            resolve_multi(option_label, scenario)
+                            st.rerun()
+    else:
+        sm = scenario_math(scenario)
+        a, b = st.columns(2)
+        with a:
+            metric_card("Blind Box Cost", currency(scenario["blind_box_cost"]))
+        with b:
+            metric_card("Direct Buy", currency(scenario["direct_buy_price"]))
+
+        left, right = st.columns(2, gap="large")
+        with left:
+            with st.container(border=True):
+                st.markdown("### Blind Box")
+                show_image(scenario["blind_box_image"], "Blind Box")
+                st.write(f"Pay **{currency(scenario['blind_box_cost'])}** and receive one figure at random.")
+                for item in scenario["payouts"]:
+                    st.markdown(f"- **{item['label']}** · {currency(item['value'])} · {(item['probability'] * 100):.0f}%")
+                if st.button("Choose Blind Box", key="choose_single_box"):
+                    resolve_single("Blind Box", scenario)
+                    st.rerun()
+        with right:
+            with st.container(border=True):
+                st.markdown("### Direct Buy")
+                show_image(scenario["direct_image"], "Direct Buy")
+                st.write(f"Pay **{currency(scenario['direct_buy_price'])}** and lock in the top-value figure immediately.")
+                st.write(f"Guaranteed item: **{sm['best']['label']}**")
+                st.write(f"Market value: **{currency(sm['best']['value'])}**")
+                if st.button("Choose Direct Buy", key="choose_direct"):
+                    resolve_single("Direct Buy", scenario)
+                    st.rerun()
+
+elif st.session_state.screen == "math_single":
+    resolved = st.session_state.resolved
+    math = resolved["math"]
+    outcome = resolved["outcome"]
+    choice = st.session_state.selected_choice
+    was_correct = choice == math["optimal"]
+    correct, total_net = score_summary()
+
+    top1, top2 = st.columns([1, 1])
+    with top1:
+        if st.button("← Main Menu", key="menu_math_single", type="secondary", use_container_width=False):
+            reset_all()
+            st.rerun()
+    with top2:
+        if st.session_state.mode == "game":
+            st.markdown(f'<div style="text-align:right; color:#64748b; padding-top:8px;">Score: {correct} correct · {currency(total_net)} total net</div>', unsafe_allow_html=True)
+
+    st.markdown('<div class="eyebrow">Math Reveal</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="big-title">{"You were right" if was_correct else "Not quite"}</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="muted">You chose <b>{choice}</b>. The optimal long-run decision was <b>{math["optimal"]}</b>.</div>', unsafe_allow_html=True)
+    result_pill("Correct Decision" if was_correct else "Suboptimal Decision", "pill-good" if was_correct else "pill-bad")
+    st.write("")
+
+    a, b, c, d = st.columns(4)
+    with a:
+        metric_card("Expected Value", currency(math["ev"]))
+    with b:
+        metric_card("Blind Box Net", currency(math["blind_box_net"]))
+    with c:
+        metric_card("Direct Buy Net", currency(math["direct_net"]))
+    with d:
+        metric_card("Your Result", currency(resolved["net"]))
+
+    left, right = st.columns([1.25, 0.75], gap="large")
+    with left:
+        with st.container(border=True):
+            st.markdown("### Why?")
+            eq_terms = " + ".join([f"{p['value']}×{p['probability']}" for p in scenario["payouts"]])
+            st.markdown(f'<div class="math-step"><b>Step 1:</b> E(X) = {eq_terms} = <b>{currency(math["ev"])}</b></div>', unsafe_allow_html=True)
+            st.markdown(f'<div class="math-step"><b>Step 2:</b> {currency(math["ev"])} - {currency(scenario["blind_box_cost"])} = <b>{currency(math["blind_box_net"])}</b></div>', unsafe_allow_html=True)
+            st.markdown(f'<div class="math-step"><b>Step 3:</b> {currency(math["best"]["value"])} - {currency(scenario["direct_buy_price"])} = <b>{currency(math["direct_net"])}</b></div>', unsafe_allow_html=True)
+            cmp_symbol = ">" if math["blind_box_net"] > math["direct_net"] else "<="
+            st.markdown(f'<div class="math-step"><b>Step 4:</b> Since <b>{currency(math["blind_box_net"])}</b> {cmp_symbol} <b>{currency(math["direct_net"])}</b>, the better long-run decision is <b>{math["optimal"]}</b>.</div>', unsafe_allow_html=True)
+            result_pill(math["fairness"], fairness_class(math["ev"], scenario["blind_box_cost"]))
+    with right:
+        with st.container(border=True):
+            st.markdown("### Your Outcome")
+            show_image(outcome["image"], outcome["label"])
+            metric_card("Market Value", currency(outcome["value"]))
+            metric_card("Cost Paid", currency(resolved["cost"]))
+            metric_card("Net Result", currency(resolved["net"]))
+        with st.container(border=True):
+            st.markdown("### Possible Outcomes")
+            for item in scenario["payouts"]:
+                with st.expander(f"{item['label']} · {currency(item['value'])} · {(item['probability'] * 100):.0f}%"):
+                    show_image(item["image"], item["label"])
+        if st.button("Next", key="next_single"):
+            next_step()
+            st.rerun()
+
+elif st.session_state.screen == "math_multi":
+    resolved = st.session_state.resolved
+    math = resolved["math"]
+    outcome = resolved["outcome"]
+    choice = st.session_state.selected_choice
+    was_correct = choice == math["optimal"]
+    correct, total_net = score_summary()
+
+    top1, top2 = st.columns([1, 1])
+    with top1:
+        if st.button("← Main Menu", key="menu_math_multi", type="secondary", use_container_width=False):
+            reset_all()
+            st.rerun()
+    with top2:
+        st.markdown(f'<div style="text-align:right; color:#64748b; padding-top:8px;">Score: {correct} correct · {currency(total_net)} total net</div>', unsafe_allow_html=True)
+
+    st.markdown('<div class="eyebrow">Math Reveal</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="big-title">{"You were right" if was_correct else "Not quite"}</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="muted">You chose <b>{choice}</b>. The optimal long-run decision was <b>{math["optimal"]}</b>.</div>', unsafe_allow_html=True)
+    result_pill("Correct Decision" if was_correct else "Suboptimal Decision", "pill-good" if was_correct else "pill-bad")
+    st.write("")
+
+    a, b, c, d = st.columns(4)
+    chosen = resolved["chosen"]
+    with a:
+        metric_card("EV of 1 Box", currency(math["single_ev"]))
+    with b:
+        metric_card("Chosen Option EV", currency(chosen["ev"]))
+    with c:
+        metric_card("Direct Buy Net", currency(next(o["net"] for o in math["options"] if o["label"] == "Direct Buy")))
+    with d:
+        metric_card("Your Result", currency(resolved["net"]))
+
+    left, right = st.columns([1.2, 0.8], gap="large")
+    with left:
+        with st.container(border=True):
+            st.markdown("### Quantity Comparison")
+            for row in math["options"]:
+                pill = "pill-good" if row["label"] == math["optimal"] else "pill-neutral"
+                st.markdown(
+                    f"<div class='result-row'><div class='result-head'>{row['label']}</div><div class='result-main'>Expected net: {currency(row['net'])}</div><div class='muted'>Expected value {currency(row['ev'])} · Cost {currency(row['cost'])}</div></div>",
+                    unsafe_allow_html=True,
+                )
+                if row["label"] == math["optimal"]:
+                    result_pill("Best expected choice", pill)
+        with st.container(border=True):
+            st.markdown("### Why?")
+            st.markdown(f'<div class="math-step"><b>Step 1:</b> Compute the expected value of 1 blind box: <b>{currency(math["single_ev"])}</b>.</div>', unsafe_allow_html=True)
+            st.markdown('<div class="math-step"><b>Step 2:</b> Because the boxes are independent, the expected value of k boxes is k × EV(1 box).</div>', unsafe_allow_html=True)
+            st.markdown('<div class="math-step"><b>Step 3:</b> Compare the expected net of 1, 2, 3, and 4 blind boxes against the guaranteed net of direct buy.</div>', unsafe_allow_html=True)
+            st.markdown(f'<div class="math-step"><b>Step 4:</b> The highest expected net here is <b>{math["optimal"]}</b>.</div>', unsafe_allow_html=True)
+    with right:
+        with st.container(border=True):
+            st.markdown("### Your Realized Outcome")
+            show_image(outcome["image"], outcome["label"])
+            metric_card("Realized Value", currency(outcome["value"]))
+            metric_card("Cost Paid", currency(resolved["cost"]))
+            metric_card("Realized Net", currency(resolved["net"]))
+        if st.button("Next", key="next_multi"):
+            next_step()
+            st.rerun()
+
+elif st.session_state.screen == "summary":
+    correct, total_net = score_summary()
+    total_rounds = len(st.session_state.multi_scenarios) if st.session_state.mode == "multi" else len(st.session_state.single_scenarios)
+
+    st.markdown('<div class="hero-title">Final Results</div>', unsafe_allow_html=True)
+    st.markdown('<div class="hero-sub">You finished the game. Review your performance, then play again.</div>', unsafe_allow_html=True)
+
+    a, b, c = st.columns(3)
+    with a:
+        metric_card("Correct Choices", f"{correct}/{total_rounds}")
+    with b:
+        metric_card("Total Net", currency(total_net))
+    with c:
+        metric_card("Main Goal", "Beat intuition with math")
+
+    st.write("")
+    st.markdown("### Round-by-Round Results")
+    for item in st.session_state.history:
+        cols = st.columns([1.3, 1.15, 1.15, 0.8, 1.4])
+        with cols[0]:
+            st.markdown(f"<div class='result-row'><div class='result-head'>Scenario</div><div class='result-main'>{item['scenario']}</div></div>", unsafe_allow_html=True)
+        with cols[1]:
+            st.markdown(f"<div class='result-row'><div class='result-head'>Your Choice</div><div class='result-main'>{item['choice']}</div></div>", unsafe_allow_html=True)
+        with cols[2]:
+            st.markdown(f"<div class='result-row'><div class='result-head'>Optimal</div><div class='result-main'>{item['optimal']}</div></div>", unsafe_allow_html=True)
+        with cols[3]:
+            pill = 'pill-good' if item['correct'] else 'pill-bad'
+            text = 'Correct' if item['correct'] else 'Missed'
+            st.markdown(f"<div class='result-row'><div class='result-head'>Result</div><div style='margin-top:8px;'><span class='{pill}'>{text}</span></div></div>", unsafe_allow_html=True)
+        with cols[4]:
+            st.markdown(f"<div class='result-row'><div class='result-head'>Net / Outcome</div><div class='result-main'>{currency(item['net'])}</div><div class='muted'>{item['outcome']}</div></div>", unsafe_allow_html=True)
+
+    tips = st.columns(3)
+    with tips[0]:
+        with st.container(border=True):
+            st.markdown("### Expected Value")
+            st.write("A higher average long-run return matters more than one lucky draw.")
+    with tips[1]:
+        with st.container(border=True):
+            st.markdown("### Risk vs Certainty")
+            st.write("Sometimes the guaranteed purchase is better. Sometimes the gamble is underpriced.")
+    with tips[2]:
+        with st.container(border=True):
+            st.markdown("### Quantity Matters")
+            st.write("With multiple boxes, expected value scales linearly, but realized outcomes can still vary a lot.")
+
+    if st.button("Play Again", key="play_again"):
         reset_all()
         st.rerun()
